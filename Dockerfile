@@ -31,7 +31,7 @@ COPY --from=builder /usr/local/lib/libredis++*.so* /usr/local/lib/
 RUN ldconfig
 COPY --from=builder /src/build/demo /usr/local/bin/demo
 WORKDIR /app
-COPY script.lua /app/script.lua
+COPY fixed_window.lua /app/fixed_window.lua
 COPY token_bucket.lua /app/token_bucket.lua
 USER appuser
 CMD ["demo"]
