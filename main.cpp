@@ -22,15 +22,15 @@ int main(){
     const char* h = getenv("REDIS_HOST");
     string host = h ? h : "127.0.0.1";
     try{
+        // 1) LOAD the script into Redis once (returns its SHA)
+        // string sha = redis.script_load(load_file("script.lua"));
+        string sha = redis.script_load(load_file("token_bucket.lua"));
         long long now_s = duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
         long long start_s = (now_s / 10 + 1) * 10;      // next 10-second boundary
         if (start_s - now_s < 3) start_s += 10;          // make sure there's time for every container to reach this point
         this_thread::sleep_until(system_clock::time_point(seconds(start_s)));
         Redis redis("tcp://" + host + ":6379");
 
-        // 1) LOAD the script into Redis once (returns its SHA)
-        // string sha = redis.script_load(load_file("script.lua"));
-        string sha = redis.script_load(load_file("token_bucket.lua"));
         int allowed=0;
         int rejected=0;
         for (int i = 1; i <= 20000; ++i) {
