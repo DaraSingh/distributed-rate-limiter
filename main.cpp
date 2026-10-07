@@ -29,12 +29,14 @@ int main(){
         Redis redis("tcp://" + host + ":6379");
 
         // 1) LOAD the script into Redis once (returns its SHA)
-        string sha = redis.script_load(load_file("script.lua"));
+        // string sha = redis.script_load(load_file("script.lua"));
+        string sha = redis.script_load(load_file("token_bucket.lua"));
         int allowed=0;
         int rejected=0;
         for (int i = 1; i <= 20000; ++i) {
             // 2) CALL the script for each request
-            long long r = redis.evalsha<long long>(sha, {"user:1"}, {"100", "60"});
+            // long long r = redis.evalsha<long long>(sha, {"user:1"}, {"100", "60"});
+            long long r = redis.evalsha<long long>(sha, {"bucket:1"}, {"100", "0.1","1"});
             if(r==1) allowed++;
             else rejected++;
             // cout << "request " << i << ": " << (r == 1 ? "allowed" : "rejected") << endl;

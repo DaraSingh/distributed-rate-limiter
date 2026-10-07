@@ -32,5 +32,6 @@ RUN ldconfig
 COPY --from=builder /src/build/demo /usr/local/bin/demo
 WORKDIR /app
 COPY script.lua /app/script.lua
+COPY token_bucket.lua /app/token_bucket.lua
 USER appuser
 CMD ["demo"]
